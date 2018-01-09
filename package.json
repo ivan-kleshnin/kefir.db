@@ -1,0 +1,46 @@
+{
+  "name": "kefir.db",
+  "description": "Reactive state management toolkit based on Kefir",
+  "version": "0.1.0",
+  "author": "Ivan Kleshnin <ivan@paqmind.com> (paqmind.com)",
+  "license": "MIT",
+  "bugs": "https://github.com/ivan-kleshnin/kefir.db/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivan-kleshnin/kefir.db"
+  },
+  "keywords": [
+    "reactive",
+    "kefir",
+    "database",
+    "state"
+  ],
+  "main": "lib/index.js",
+  "dependencies": {
+    "deep-freeze": "0.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "kefir": "*",
+    "ramda": "*"
+  },
+  "peerDependencies": {
+    "kefir": "*",
+    "ramda": "*"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "prebuild": "rm -rf lib && mkdir -p lib",
+    "build": "babel src/ -d lib/",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no tests available\" && exit 1"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
