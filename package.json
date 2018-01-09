@@ -23,11 +23,11 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "kefir": "*",
-    "ramda": "*"
+    "@paqmind/ramda": "*"
   },
   "peerDependencies": {
     "kefir": "*",
-    "ramda": "*"
+    "@paqmind/ramda": "*"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -35,7 +35,7 @@
   "scripts": {
     "prebuild": "rm -rf lib && mkdir -p lib",
     "build": "babel src/ -d lib/",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "echo \"Error: no tests available\" && exit 0"
   },
   "babel": {

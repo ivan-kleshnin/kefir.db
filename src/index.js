@@ -1,6 +1,6 @@
+import * as R from "@paqmind/ramda"
 import deepFreeze from "deep-freeze"
 import K from "kefir"
-import * as R from "ramda"
 
 // Different Helpers ===============================================================================
 
@@ -364,11 +364,11 @@ export let canRedo = (historyState) =>
   historyState.i < historyState.log.length - 1
 
 export function undo(hs) {
-  return canUndo(hs) ? R.over("i", R.dec, hs) : hs
+  return canUndo(hs) ? R.over2("i", R.dec, hs) : hs
 }
 
 export function redo(hs) {
-  return canRedo(hs) ? R.over("i", R.inc, hs) : hs
+  return canRedo(hs) ? R.over2("log", R.inc, hs) : hs
 }
 
 export let withHistory = R.curry((options, Store) => {
@@ -402,7 +402,7 @@ export let withHistory = R.curry((options, Store) => {
               }
             }
             let state = fn(hs.log[hs.i])
-            return R.set("log", tailAppend(state, hs.log), hs)
+            return R.set2("log", tailAppend(state, hs.log), hs)
           })
         }
       })
@@ -455,7 +455,7 @@ export let derive = (streamsToProps, mapFn) => {
 export let deriveOne = (stream, mapFn) => {
   return stream
     .skipDuplicates()
-    .map(R.is(Array, mapFn) ? R.view(mapFn) : mapFn)
+    .map(R.is(Array, mapFn) ? R.view2(mapFn) : mapFn)
     .skipDuplicates()
     .toProperty()
 }
