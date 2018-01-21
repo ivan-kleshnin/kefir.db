@@ -1,11 +1,9 @@
 import * as R from "@paqmind/ramda"
 import deepFreeze from "deep-freeze"
 import K from "kefir"
+import Util from "util"
 
 // Different Helpers ===============================================================================
-
-let inspect = (s) =>
-  R.is(String, s) ? `'${s}'` : String(s)
 
 // Number -> Promise ()
 export let delay = (time) => {
@@ -78,7 +76,7 @@ let actionToString = (action) => {
     // action :: Function
     return action.name || "anonymous"
   } else {
-    return inspect(action)
+    return Util.inspect(action)
   }
 }
 
@@ -100,7 +98,7 @@ export let makeStore = (options) => {
         } else if (fn.fn) {
           nextState = actionToFunction(fn)(prevState)
         } else {
-          throw Error(`dispatched value must be a function, got ${inspect(fn)}`)
+          throw Error(`dispatched value must be a function, got ${Util.inspect(fn)}`)
         }
         return options.freezeFn(nextState)
       }, null)
@@ -128,11 +126,14 @@ let logActionFn = (storeName, action) => {
   }
 }
 
-let logStateFn = (storeName, state) => {
+let logStateFn = (storeName, state, config) => {
+  config = R.merge({
+    depth: 3,
+  }, config)
   if (isBrowser) {
-    console.log(`%c# ${storeName} = ${inspect(state)}`, `color: brown`)
+    console.log(`%c# ${storeName} =`, `color: brown`, state)
   } else {
-    console.log(`# ${storeName} = ${inspect(state)}`)
+    console.log(`# ${storeName} =`, Util.inspect(state, {depth: config.depth}))
   }
 }
 
@@ -174,6 +175,7 @@ withLog.options = {
   input: true,
   output: true,
   key: "",
+  depth: 3,
 }
 
 // Control mixins ==================================================================================
