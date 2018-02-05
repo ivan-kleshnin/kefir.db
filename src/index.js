@@ -448,9 +448,9 @@ export let derive = (streamsToProps, mapFn) => {
   return K.combine(
       R.map($ => $.skipDuplicates(), streamsToProps)
     )
-    .throttle(10)
+    .debounce(1)
     .map(mapFn)
-    .skipDuplicates()
+    .skipDuplicates(R.equals)
     .toProperty()
 }
 
@@ -458,6 +458,6 @@ export let deriveOne = (stream, mapFn) => {
   return stream
     .skipDuplicates()
     .map(R.is(Array, mapFn) ? R.view2(mapFn) : mapFn)
-    .skipDuplicates()
+    .skipDuplicates(R.equals)
     .toProperty()
 }
