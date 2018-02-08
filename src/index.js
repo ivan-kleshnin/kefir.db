@@ -454,7 +454,7 @@ export let derive = (stream$, mapFn) => {
 
 export let deriveObj = (streamObj, mapFn) => {
   return K.combine(
-      R.map($ => $.skipDuplicates(), streamsToProps)
+      R.map($ => $.skipDuplicates(), streamObj)
     )
     .debounce(1)
     .map(mapFn)
