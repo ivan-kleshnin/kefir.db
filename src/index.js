@@ -317,9 +317,10 @@ export let withLocalStoragePersistence = R.curry((options, Store) => {
           return null
         }
       }
-      action$ = action$
-        .skip(1)
-        .merge(K.constant(initFn))
+      action$ = K.merge([
+        K.constant(initFn),
+        action$.skip(1),
+      ])
     }
 
     let store = Store(action$)
