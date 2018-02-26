@@ -3,7 +3,12 @@ import deepFreeze from "deep-freeze"
 import K from "kefir"
 import Util from "util"
 
-// Different Helpers ===============================================================================
+// Extra? ==========================================================================================
+// Boolean
+export let isBrowser = typeof window !== "undefined"
+
+// Boolean
+export let isServer = !isBrowser && typeof process !== "undefined"
 
 // Number -> Promise ()
 export let delay = (time) => {
@@ -12,72 +17,30 @@ export let delay = (time) => {
   })
 }
 
-export let isBrowser = typeof window !== "undefined"
-
-export let isServer = !isBrowser && typeof process !== "undefined"
-
-export let ifBrowser = (...streams) =>
-  isBrowser ? streams : []
-
-export let ifServer = (...streams) =>
-  isServer ? streams : []
-
+// Helpers =========================================================================================
+// ... -> Store
 export let run = (...fns) => {
-  let Store = R.pipe(...fns)()
   return (...action$s) =>
-    Store(K.merge(R.chain(maybeAction$ => {
-      return R.is(Array, maybeAction$)
-        ? maybeAction$
-        : [maybeAction$]
-    }, action$s)))
+    R.pipe(...fns)()(
+      K.merge(action$s)
+    )
 }
 
+// s2 -> $ (s1 -> s2)
 export let init = (seed) =>
   K.constant(function init() { return seed })
 
+// $ s2 -> $ (s1 -> s2)
 export let initAsync = ($) =>
   $.take(1).map(s => function initAsync() { return s })
 
 // Store ===========================================================================================
-
 let cmpFn = R.identical
 
 let freezeFn = (v) => {
   return process.env.NODE_ENV != "production"
     ? (R.is(Object, v) ? deepFreeze(v) : v)
     : v
-}
-
-let actionToFunction = (action) => {
-  let {fn, args} = action
-  if (args) {
-    args = R.map(arg => {
-      return arg.fn
-        ? actionToFunction(arg)
-        : arg
-    }, args)
-    return fn(...args)
-  } else {
-    return fn
-  }
-}
-
-let actionToString = (action) => {
-  if (action.fn) {
-    if (action.args) {
-      // action :: {fn :: Function, args :: Array a}
-      let args = R.map(actionToString, action.args)
-      return `${actionToString(action.fn)}(${R.join(", ", args)})`
-    } else {
-      // action :: {fn :: Function}
-      return actionToString(action.fn)
-    }
-  } else if (R.is(Function, action)) {
-    // action :: Function
-    return action.name || "anonymous"
-  } else {
-    return Util.inspect(action)
-  }
 }
 
 export let makeStore = (options) => {
@@ -95,8 +58,6 @@ export let makeStore = (options) => {
         let nextState
         if (R.is(Function, fn)) {
           nextState = fn(prevState)
-        } else if (fn.fn) {
-          nextState = actionToFunction(fn)(prevState)
         } else {
           throw Error(`dispatched value must be a function, got ${Util.inspect(fn)}`)
         }
@@ -120,9 +81,9 @@ let storeCount = 0
 
 let logActionFn = (storeName, action) => {
   if (isBrowser) {
-    console.log(`%c@ ${storeName} λ ${actionToString(action)}`, `color: green`)
+    console.log(`%c@ ${storeName} λ ${action.name || "anonymous"}`, `color: green`)
   } else {
-    console.log(`@ ${storeName} λ ${actionToString(action)}`)
+    console.log(`@ ${storeName} λ ${action.name || "anonymous"}`)
   }
 }
 
@@ -256,7 +217,6 @@ withLog.options = {
 // withControl.options = {}
 
 // Persistence mixins ==============================================================================
-
 // TODO timeout option?!
 let _memCache = {}
 
