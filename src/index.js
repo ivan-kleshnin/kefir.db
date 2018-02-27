@@ -10,13 +10,6 @@ export let isBrowser = typeof window !== "undefined"
 // Boolean
 export let isServer = !isBrowser && typeof process !== "undefined"
 
-// Number -> Promise ()
-export let delay = (time) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time)
-  })
-}
-
 // Helpers =========================================================================================
 // ... -> Store
 export let run = (...fns) => {
@@ -405,24 +398,26 @@ let tailAppend = R.curry((x, xs) => {
 })
 
 // Deriving ========================================================================================
-export let derive = (state$, mapFn) => {
+// Note: immutable transformations rotate object ids, so `skipDuplicates()` often gives the same result
+// as `skipDuplicates(R.equals)`, being in order of magnitudes faster.
+export let derive = R.curry((state$, mapFn) => {
   return state$
     .skipDuplicates()
     .map(R.is(Function, mapFn) ? mapFn : R.view2(mapFn))
-    .skipDuplicates()
+    .skipDuplicates(R.equals)
     .toProperty()
-}
+})
 
-export let deriveObj = (state$s, mapFn) => {
+export let deriveObj = R.curry((state$s, mapFn) => {
   return K.combine(
       R.map($ => $.skipDuplicates(), state$s)
     )
-    .throttle(1, {leading: false})
+    .throttle(1)
     .map(mapFn)
-    .skipDuplicates()
+    .skipDuplicates(R.equals)
     .toProperty()
-}
+})
 
-export let deriveArr = (state$s, mapFn) => {
+export let deriveArr = R.curry((state$s, mapFn) => {
   return deriveObj(state$s, (args) => mapFn(...args))
-}
+})
