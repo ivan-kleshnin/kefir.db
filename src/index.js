@@ -409,7 +409,7 @@ export let derive = (state$, mapFn) => {
   return state$
     .skipDuplicates()
     .map(R.is(Function, mapFn) ? mapFn : R.view2(mapFn))
-    .skipDuplicates(R.equals)
+    .skipDuplicates()
     .toProperty()
 }
 
@@ -417,9 +417,9 @@ export let deriveObj = (state$s, mapFn) => {
   return K.combine(
       R.map($ => $.skipDuplicates(), state$s)
     )
-    .debounce(1)
+    .throttle(1, {leading: false})
     .map(mapFn)
-    .skipDuplicates(R.equals)
+    .skipDuplicates()
     .toProperty()
 }
 
