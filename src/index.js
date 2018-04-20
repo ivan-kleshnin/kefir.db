@@ -324,7 +324,7 @@ export function undo(hs) {
 }
 
 export function redo(hs) {
-  return canRedo(hs) ? R.over2("log", R.inc, hs) : hs
+  return canRedo(hs) ? R.over2("i", R.inc, hs) : hs
 }
 
 export let withHistory = R.curry((options, Store) => {

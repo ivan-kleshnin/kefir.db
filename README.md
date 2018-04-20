@@ -53,7 +53,8 @@ Learn how to use `Logging` middleware.
 
 Learn how to use `Control` middleware.
 
-## Useful links
+## Links
 
-* [Reactive states](https://github.com/ivan-kleshnin/reactive-states) <small>article</small>
-* [Unredux Project](https://github.com/ivan-kleshnin/unredux) <small>repo</small>
+* [Kefir](https://kefirjs.github.io/kefir) (docs)
+* [Reactive states](https://github.com/ivan-kleshnin/reactive-states) (article)
+* [Unredux Project](https://github.com/ivan-kleshnin/unredux) (repo)
