@@ -16,6 +16,7 @@ $ npm install kefir.db
 ```
 
 ```js
+import K from "kefir"
 import * as D from "kefir.db"
 
 let inc = (x) => x + 1
@@ -28,7 +29,7 @@ let action$ = K.merge(
   K.later(300, inc), // increment counter after 300ms
 )
 
-let Store = makeStore({})     // pass some options, check `makeStore.options` or docs
+let Store = D.makeStore({})    // pass some options, check `makeStore.options` or docs
 let state$ = Store(action$).$ // make state, getting stream from a `Store(..)` call
 
 state$.log("state$")          // use built-in Kefir logging
