@@ -1,7 +1,7 @@
 {
   "name": "kefir.db",
   "description": "Reactive state management toolkit based on Kefir",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Ivan Kleshnin <ivan@paqmind.com> (paqmind.com)",
   "license": "MIT",
   "bugs": "https://github.com/ivan-kleshnin/kefir.db/issues",
