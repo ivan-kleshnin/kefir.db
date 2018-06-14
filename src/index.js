@@ -214,6 +214,10 @@ withLog.options = {
 let _memCache = {}
 
 export let withMemoryPersistence = R.curry((options, Store) => {
+  if (!isBrowser) {
+    throw Error("withMemoryPersistence can be used only in Browser")
+  }
+
   function MemoryPersistentStore(action$) {
     options = R.merge(withMemoryPersistence.options, options)
 
