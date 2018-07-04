@@ -22,12 +22,12 @@ import * as D from "kefir.db"
 let inc = (x) => x + 1
 let dec = (x) => x - 1
 
-let action$ = K.merge(
+let action$ = K.merge([
   K.constant(0),     // initial counter
   K.later(100, inc), // increment counter after 100ms
   K.later(200, dec), // decrement counter after 200ms
   K.later(300, inc), // increment counter after 300ms
-)
+])
 
 let Store = D.makeStore({})    // pass some options, check `makeStore.options` or docs
 let state$ = Store(action$).$ // make state, getting stream from a `Store(..)` call
